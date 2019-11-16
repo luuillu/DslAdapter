@@ -43,12 +43,14 @@ class Example5Activity : AppCompatActivity(), View.OnClickListener {
 
     private  fun getListAdapter(list:List<Any>) = DslMultiTypeAdapter(list).also {
 
+        //数据为null会隐藏这一项
         it<Int, TextView> {
             it.onBind {
                 text = "Received data1 value:$it"
             }
         }
 
+        //类型后面添加？表示数据为null的时候也需要展示出来
         it<Double?, TextView> {
             it.onBind {
 
