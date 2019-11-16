@@ -42,7 +42,7 @@ val adapter = DslAdapter<Pair<String, Int>>().also {
 运行后的效果为：
 ![](https://github.com/luuillu/DslAdapter/blob/master/image/example_1.png?raw=true)
 
-## 例2 在xml中布局
+## 例2：在xml中布局
 直接在代码中创建布局存在一个确定是不支持预览，对于结构复杂的列表，可以先在XML中写好布局，然后添加到adapter中。
 
 ```
@@ -65,7 +65,7 @@ adapter = DslAdapter(dataList).also {
             }
         }
 ```
-## 例三 MutitypeAdapter
+## 例3：MutitypeAdapter
 有时候需要在一个列表中显示不只一种类型的数据，这个库中的DslMultiTypeAdapter 实现了这个功能
 
 ```
@@ -96,7 +96,7 @@ adapter = DslAdapter(dataList).also {
 ```
 这个列表支持两种类型的数据HeaderData，和 ContentData。
 
-## 列表项预留位置(DslPlaceHolder)
+## 例四：列表项预留位置(DslPlaceHolder)
 有时列表需要显示多种类型的数据，这些数据来自不同的服务器接口，如果等服务返回数据后再把数据插入列表，将会导致先返回的数据显示在前面，后返回的数据显示在后面。而实际通常的需求是，数据展示顺序由业务逻辑决定，不受网络返回快慢影响。这个库中的DslPlaceHolder可以方便处理这种情况。实现原理时预先创建出DslPlaceHolder(null) 插入列表，以便占好位置，等数据返回的时候通过DslPlaceHolder更新adapter。
 
 对于暂时没有的数据，UI上面通常有两种显示方式：1 隐藏相关项；2把相关项显示出来，但里面显示“暂无数据”。这个库支持这两种方式。既可以隐藏没有数据的项，也可以处理成显示暂无数据。详细用法可以参考工程中的Example5
