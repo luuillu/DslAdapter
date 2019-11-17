@@ -55,7 +55,7 @@ class Example1Activity : AppCompatActivity() {
 
                 orientation = HORIZONTAL
 
-                //创建一个TextView对象，并添加到LinearLayout中
+                //创建一个TextView类型的child对象，初始化之后会LinearLayout中
                 it<TextView> {
 
                     it.layoutParams {
