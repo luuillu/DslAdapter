@@ -38,6 +38,7 @@ class Example3Activity : AppCompatActivity() {
 
 }
 
+//可以用这种方式把多个View都需要的样式提取出来，方便复用
 private fun getListStyle(otherStyle: TextView.() -> Unit) =
     arrayOf(1f, 1f).mapIndexed { index, weight ->
 
