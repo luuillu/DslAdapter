@@ -30,7 +30,7 @@ class Example1Activity : AppCompatActivity() {
         recyclerView.adapter = DslAdapter(scoreList).also {
 
             /*
-           * 创建ViewHolder对应的布局， 泛型反射表示要需要创建的View的类型
+           * 创建ViewHolder对应的布局， 泛型参数表示要需要创建的View的类型
            * 后面紧跟的lambda表达式是一个扩展函数， receive type是泛型参数代表的View类型。
            * 所以可以在lambda表达式中对创建出来的View做一些初始化操作。
            */
