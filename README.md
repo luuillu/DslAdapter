@@ -7,6 +7,7 @@ A DSL style RecyclerView Adapter in Kotlin.
 虽然这个库的目的是为了简化Adapter创建步骤，但它也支持用Dsl的方式创建任意布局，这与Anko相似。然而Anko创建Dsl会对原有View封装了一层，这导致两个问题：
 1. 封装后的View方法、属性与原有View有差异，会增加学习成本，
 2. 自定义View需要写额外的的代码适配Anko
+
 这个库用泛型实现Dsl，不需对已存在的View进行额外的包装，可以直接使用，从而解决了这个问题。
 
 ## 例1：一个包含两列数据的列表：
