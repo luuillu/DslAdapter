@@ -24,7 +24,9 @@ class Example1Activity : AppCompatActivity() {
 
         val scoreList = listOf("Jim Green" to 80, "LiLei" to 90, "HanMeiMei" to 95, "Polly" to 100)
 
-
+        /*
+        * Adapter所关联的数据类型由DslAdapter的泛型参数决定。
+        */
         recyclerView.adapter = DslAdapter(scoreList).also {
 
             /*
