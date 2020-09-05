@@ -26,7 +26,10 @@ private val EMPTY_LAMBDA = {}
 
 open class DslInflater<CURRENT : View, PARENT : View>(view: CURRENT) :
     DslBasicInflater<PARENT>(view) {
-    inline operator fun <reified CHILD : View> invoke(@LayoutRes resId: Int = 0, init: CHILD.(DslInflater<CHILD, CURRENT>) -> Unit) {
+    inline operator fun <reified CHILD : View> invoke(
+        @LayoutRes resId: Int = 0,
+        init: CHILD.(DslInflater<CHILD, CURRENT>) -> Unit
+    ) {
 
         if (view !is ViewGroup) {
             throw UnsupportedOperationException("Can not add ${CHILD::class.java.simpleName} to ${view.javaClass.simpleName}, which is not ViewGroup")
@@ -46,7 +49,10 @@ class DslBindableInflater<BindType, CURRENT : View, PARENT : View>(
     view: CURRENT,
     val bindEvents: MutableList<(BindType, Int) -> Unit>
 ) : DslBasicInflater<PARENT>(view) {
-    inline operator fun <reified CHILD : View> invoke(@LayoutRes resId: Int = 0, init: CHILD.(DslBindableInflater<BindType, CHILD, CURRENT>) -> Unit) {
+    inline operator fun <reified CHILD : View> invoke(
+        @LayoutRes resId: Int = 0,
+        init: CHILD.(DslBindableInflater<BindType, CHILD, CURRENT>) -> Unit
+    ) {
         if (view !is ViewGroup) {
             throw UnsupportedOperationException("${view.javaClass.simpleName} is not ViewGroup")
         }
@@ -97,40 +103,40 @@ fun View.dip(dp: Number): Int {
 *根据parent类型和layoutParams的类型设置layoutParams
 **/
 @Suppress("UNCHECKED_CAST")
-inline fun <PARENT : ViewGroup, LAYOUT_PARAM : ViewGroup.LayoutParams> dslProcessLayoutParams(
-    dlsBasicInflater: DslBasicInflater<PARENT>,
-    crossinline block: LAYOUT_PARAM.() -> Unit
-) {
-    dlsBasicInflater.setLayoutParams =
-        { (dlsBasicInflater.view.layoutParams as LAYOUT_PARAM).block() }
+open class DslLayoutParamWrapper<LAYOUT_PARAM : ViewGroup.LayoutParams>(private val dlsBasicInflater: DslBasicInflater<*>) {
+
+    operator fun invoke(block: LAYOUT_PARAM.() -> Unit) {
+        dlsBasicInflater.setLayoutParams =
+            { (dlsBasicInflater.view.layoutParams as LAYOUT_PARAM).block() }
+    }
 }
 
-/*
-*利用重载把View类型和相应的LayoutParams的类型关联起来
-**/
-inline fun DslBasicInflater<ViewGroup>.layoutParams(
-    ignore: ViewGroup? = null,
-    crossinline block: ViewGroup.MarginLayoutParams.() -> Unit
-) = dslProcessLayoutParams(this, block)
+class DslLayoutParamWrapperViewGroup(dlsBasicInflater: DslBasicInflater<*>) :
+    DslLayoutParamWrapper<ViewGroup.MarginLayoutParams>(dlsBasicInflater)
 
-inline fun <T : RecyclerView> DslBasicInflater<T>.layoutParams(
-    ignore: T? = null,
-    crossinline block: RecyclerView.LayoutParams.() -> Unit
-) = dslProcessLayoutParams(this, block)
+val <T : ViewGroup> DslBasicInflater<T>.layoutParams
+    get() = DslLayoutParamWrapperViewGroup(this)
 
-inline fun <T : LinearLayout> DslBasicInflater<T>.layoutParams(
-    ignore: T? = null,
-    crossinline block: LinearLayout.LayoutParams.() -> Unit
-) = dslProcessLayoutParams(this, block)
+class DslLayoutParamWrapperRecyclerView(dlsBasicInflater: DslBasicInflater<*>) :
+    DslLayoutParamWrapper<RecyclerView.LayoutParams>(dlsBasicInflater)
 
-inline fun <T : RelativeLayout> DslBasicInflater<T>.layoutParams(
-    ignore: T? = null,
-    crossinline block: RelativeLayout.LayoutParams.() -> Unit
-) = dslProcessLayoutParams(this, block)
+val <T : RecyclerView> DslBasicInflater<T>.layoutParams
+    get() = DslLayoutParamWrapperRecyclerView(this)
 
-inline fun <T : FrameLayout> DslBasicInflater<T>.layoutParams(
-    ignore: T? = null,
-    crossinline block: FrameLayout.LayoutParams.() -> Unit
-) = dslProcessLayoutParams(this, block)
+class DslLayoutParamWrapperLinearLayout(dlsBasicInflater: DslBasicInflater<*>) :
+    DslLayoutParamWrapper<LinearLayout.LayoutParams>(dlsBasicInflater)
 
+val <T : LinearLayout> DslBasicInflater<T>.layoutParams
+    get() = DslLayoutParamWrapperLinearLayout(this)
 
+class DslLayoutParamWrapperRelativeLayout(dlsBasicInflater: DslBasicInflater<*>) :
+    DslLayoutParamWrapper<RelativeLayout.LayoutParams>(dlsBasicInflater)
+
+val <T : RelativeLayout> DslBasicInflater<T>.layoutParams
+    get() = DslLayoutParamWrapperRelativeLayout(this)
+
+class DslLayoutParamWrapperFrameLayout(dlsBasicInflater: DslBasicInflater<*>) :
+    DslLayoutParamWrapper<FrameLayout.LayoutParams>(dlsBasicInflater)
+
+val <T : FrameLayout> DslBasicInflater<T>.layoutParams
+    get() = DslLayoutParamWrapperFrameLayout(this)
